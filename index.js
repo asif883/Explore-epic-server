@@ -46,6 +46,7 @@ async function run() {
       const spot = await touristSpotCollection.findOne(query);
       res.send(spot)
     })
+    
 
     app.post('/addSpots', async(req,res)=>{
         const newSpot =req.body;
@@ -64,6 +65,44 @@ async function run() {
       const result =await cursor.toArray();
       res.send(result)
     })
+
+
+    // myList
+    app.get('/myList/:email', async(req, res)=>{
+      // console.log(req.params.email)
+      const result = await touristSpotCollection.find({
+        user_email: req.params.email}).toArray();
+      res.send(result)
+    })
+
+    // Update
+    app.put('/updateSpots/:id',async (req, res)=>{
+      const id =req.params.id;
+      const filter= {_id: new ObjectId(id)};
+      const options ={upsert: true};
+      const updateTouristSpot = req.body
+      const update ={
+        $set:{spotName:updateTouristSpot.spotName,
+          country_name:updateTouristSpot.country_name,
+          image:updateTouristSpot.image,
+        location:updateTouristSpot.location,
+        average_cost:updateTouristSpot.average_cost,
+        seasonality:updateTouristSpot.seasonality, 
+        travel_time:updateTouristSpot.travel_time,total_visitors_per_year:updateTouristSpot.total_visitors_per_year,user_email:updateTouristSpot.user_email,user_name:updateTouristSpot.user_name,short_description:updateTouristSpot.short_description
+
+        }
+      }
+      const result =await touristSpotCollection.updateOne(filter,update,options);
+      res.send(result)
+    })
+    // delete
+    // app.delete('/updateSpots/:id', async(req , res)=>{
+    //   const id = req.params.id;
+    //   const query = {_id : new ObjectId(id)}
+    //   const result =await touristSpotCollection.deleteOne(query);
+    //   res.send(result);
+
+    // })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
