@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port  =process.env.PORT || 5000
 
 
@@ -32,6 +32,7 @@ async function run() {
     await client.connect();
 
     const touristSpotCollection = client.db('tourDB').collection('tour')
+    const countrySpotCollection = client.db('countryDB').collection('country')
 
     app.get('/addSpots', async(req , res)=>{
         const cursor = touristSpotCollection.find();
@@ -39,10 +40,29 @@ async function run() {
         res.send(result)
     })
 
+    app.get('/addSpots/:id', async(req,res)=>{
+      const id = req.params.id;
+      const query ={_id: new ObjectId(id)};
+      const spot = await touristSpotCollection.findOne(query);
+      res.send(spot)
+    })
+
     app.post('/addSpots', async(req,res)=>{
         const newSpot =req.body;
        const result =await  touristSpotCollection.insertOne(newSpot);
        res.send(result);
+    });
+
+  //  country add
+    app.post('/addCountry', async(req,res)=>{
+      const country = req.body;
+      const result =await countrySpotCollection.insertOne(country)
+      res.send(result)
+    });
+    app.get('/addCountry', async(req, res)=>{
+      const cursor =countrySpotCollection.find();
+      const result =await cursor.toArray();
+      res.send(result)
     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
