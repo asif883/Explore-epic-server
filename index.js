@@ -33,6 +33,7 @@ async function run() {
 
     const touristSpotCollection = client.db('tourDB').collection('tour')
     const countrySpotCollection = client.db('countryDB').collection('country')
+    const addCountryDetailsCollection = client.db('detailsDB').collection('Details')
 
     app.get('/addSpots', async(req , res)=>{
         const cursor = touristSpotCollection.find();
@@ -53,6 +54,22 @@ async function run() {
        const result =await  touristSpotCollection.insertOne(newSpot);
        res.send(result);
     });
+
+    
+    // app.get ('/addCountryDetails/:country',async (res, req)=>{
+    //   const spot = await addCountryDetailsCollection.find({country_name: req.params.country}).toArray();
+    //   res.send(spot)
+    // })
+    // app.post('/addCountryDetails', async(req, res )=>{
+    //   const details =req.body;
+    //   const result = await addCountryDetailsCollection.insertOne(details);
+    //   res.send(result)
+    // });
+    app.get('/addCountryDetails', async(req,res)=>{
+      const cursor = addCountryDetailsCollection.find();
+      const result =await cursor.toArray();
+      res.send(result)
+    })
 
   //  country add
     app.post('/addCountry', async(req,res)=>{
