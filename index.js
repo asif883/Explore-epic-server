@@ -60,11 +60,11 @@ async function run() {
     //   const spot = await addCountryDetailsCollection.find({country_name: req.params.country}).toArray();
     //   res.send(spot)
     // })
-    // app.post('/addCountryDetails', async(req, res )=>{
-    //   const details =req.body;
-    //   const result = await addCountryDetailsCollection.insertOne(details);
-    //   res.send(result)
-    // });
+    app.post('/addCountryDetails', async(req, res )=>{
+      const details =req.body;
+      const result = await addCountryDetailsCollection.insertOne(details);
+      res.send(result)
+    });
     app.get('/addCountryDetails', async(req,res)=>{
       const cursor = addCountryDetailsCollection.find();
       const result =await cursor.toArray();
