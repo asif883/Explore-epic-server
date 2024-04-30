@@ -9,7 +9,13 @@ const port  =process.env.PORT || 5000
 
 // middleware
 
-app.use(cors())
+app.use(
+  cors({
+  origin: ['http://localhost:5173', 'https://explore-world-f463f.web.app'],
+  credentials: true,
+  }),
+  )
+  
 app.use(express.json())
 
 
@@ -29,7 +35,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const touristSpotCollection = client.db('tourDB').collection('tour')
     const countrySpotCollection = client.db('countryDB').collection('country')
@@ -54,7 +60,12 @@ async function run() {
        const result =await  touristSpotCollection.insertOne(newSpot);
        res.send(result);
     });
+  //  sort
 
+  // app.get('/addSpots:cost' , async(req ,res )=>{
+  //   const cost = req.params.cost
+  //   const sortOptions =
+  // })
     
     // app.get ('/CountryDetail/:country',async (res, req)=>{
     //   const spot = await touristSpotCollection.find({country_name: req.params.country}).toArray();
